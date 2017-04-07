@@ -1,0 +1,35 @@
+
+#################################
+######  抓取公账号历史消息 ######
+#################################
+
+抓取步骤：
+
+1.下载QQ浏览器，并安装微信插件和Custom Style Script插件
+2.Custom Style Script插件可根据域名url注入自定义的js文件。
+配置 Custom Style Script：
+
+URL ：https://mp.weixin.qq.com/mp/getmasssendmsg
+JS ：
+window.addEventListener("load", 
+function() {
+var s = document.createElement('script');
+    s.src = "https://sign.leesrobots.com/statics/spider.js?_=" + (new Date()).getTime();
+    document.body.appendChild(s);
+
+}, false);
+
+3.搭建https站点：https://sign.leesrobots.com 用于存放JS爬虫 和 部署接收爬虫提交爬取的接口
+
+4.用插件登录微信。运行autowx.exe,autowx会自动做以下事情
+	a. 会从https接口读取待爬取的公账号队列，领取任务。
+	b. 将公账号biz参数，拼接为公众号历史消息URL：
+		如：http://mp.weixin.qq.com/mp/getmasssendmsg?__biz=MzA5NzA3NjE1MA==#wechat_webview_type=1&wechat_redirect
+	c. 将URL输入微信聊天窗口，发送，并点击聊天窗口的该链接，打开历史消息网页（微信插件在此做将url中wechat_redirect置换为访问历史消息的key和pass_ticket参数）。
+	d. autowx 待当前任务执行完毕后，立刻再去领任务。任务为空时，休眠n秒后再次请求任务
+	
+5. Custom Style Script 配置的脚本自动注入到历史页面中执行。
+	收集历史消息，发送到https站点接口
+
+
+6. 搭建一台虚拟机。WIN7安装多账户远程桌面补丁。以此实现多客户机.
